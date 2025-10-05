@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  # Infrastructure Services
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    hostname: kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9101:9101"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: transport_ticketing
+      MYSQL_USER: root
+      MYSQL_PASSWORD: T1981@I29#sql
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Microservices
+  passenger-service:
+    build:
+      context: ./services/passenger-service
+      dockerfile: Dockerfile
+    container_name: passenger-service
+    ports:
+      - "8081:8081"
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=T1981@I29#sql
+      - KAFKA_BROKERS=kafka:29092
+    depends_on:
+      - mysql
+      - kafka
+
+  transport-service:
+    build:
+      context: ./services/transport-service
+      dockerfile: Dockerfile
+    container_name: transport-service
+    ports:
+      - "8082:8082"
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=T1981@I29#sql
+      - KAFKA_BROKERS=kafka:29092
+    depends_on:
+      - mysql
+      - kafka
+
+  ticketing-service:
+    build:
+      context: ./services/ticketing-service
+      dockerfile: Dockerfile
+    container_name: ticketing-service
+    ports:
+      - "8083:8083"
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=T1981@I29#sql
+      - KAFKA_BROKERS=kafka:29092
+    depends_on:
+      - mysql
+      - kafka
+
+  payment-service:
+    build:
+      context: ./services/payment-service
+      dockerfile: Dockerfile
+    container_name: payment-service
+    ports:
+      - "8084:8084"
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=T1981@I29#sql
+      - KAFKA_BROKERS=kafka:29092
+    depends_on:
+      - mysql
+      - kafka
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    ports:
+      - "8085:8085"
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=T1981@I29#sql
+      - KAFKA_BROKERS=kafka:29092
+    depends_on:
+      - mysql
+      - kafka
+
+  admin-service:
+    build:
+      context: ./services/admin-service
+      dockerfile: Dockerfile
+    container_name: admin-service
+    ports:
+      - "8086:8086"
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=T1981@I29#sql
+      - KAFKA_BROKERS=kafka:29092
+    depends_on:
+      - mysql
+      - kafka
+
+volumes:
+  mysql_data:

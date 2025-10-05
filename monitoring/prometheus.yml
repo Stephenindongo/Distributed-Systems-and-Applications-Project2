@@ -1,0 +1,75 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "alert_rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # cAdvisor
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  # MySQL Exporter
+  - job_name: 'mysql-exporter'
+    static_configs:
+      - targets: ['mysql-exporter:9104']
+
+  # Kafka Exporter
+  - job_name: 'kafka-exporter'
+    static_configs:
+      - targets: ['kafka-exporter:9308']
+
+  # Application Services
+  - job_name: 'passenger-service'
+    static_configs:
+      - targets: ['passenger-service:8081']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'transport-service'
+    static_configs:
+      - targets: ['transport-service:8082']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'ticketing-service'
+    static_configs:
+      - targets: ['ticketing-service:8083']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'payment-service'
+    static_configs:
+      - targets: ['payment-service:8084']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'notification-service'
+    static_configs:
+      - targets: ['notification-service:8085']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'admin-service'
+    static_configs:
+      - targets: ['admin-service:8086']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
