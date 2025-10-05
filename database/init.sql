@@ -1,5 +1,5 @@
 -- Windhoek Transport Ticketing System Database Schema
--- Created for distributed smart public transport ticketing system
+CREATE DATABASE IF NOT EXISTS transport_ticketing;
 
 USE transport_ticketing;
 

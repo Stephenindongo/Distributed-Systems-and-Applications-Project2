@@ -39,10 +39,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: password123
       MYSQL_DATABASE: transport_ticketing
       MYSQL_USER: root
-      MYSQL_PASSWORD: T1981@I29#sql
+      MYSQL_PASSWORD: password123
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -58,7 +58,7 @@ services:
     environment:
       - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
       - DATABASE_USER=root
-      - DATABASE_PASSWORD=T1981@I29#sql
+      - DATABASE_PASSWORD=password123
       - KAFKA_BROKERS=kafka:29092
     depends_on:
       - mysql
@@ -74,7 +74,7 @@ services:
     environment:
       - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
       - DATABASE_USER=root
-      - DATABASE_PASSWORD=T1981@I29#sql
+      - DATABASE_PASSWORD=password123
       - KAFKA_BROKERS=kafka:29092
     depends_on:
       - mysql
@@ -90,7 +90,7 @@ services:
     environment:
       - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
       - DATABASE_USER=root
-      - DATABASE_PASSWORD=T1981@I29#sql
+      - DATABASE_PASSWORD=password123
       - KAFKA_BROKERS=kafka:29092
     depends_on:
       - mysql
@@ -106,7 +106,7 @@ services:
     environment:
       - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
       - DATABASE_USER=root
-      - DATABASE_PASSWORD=T1981@I29#sql
+      - DATABASE_PASSWORD=password123
       - KAFKA_BROKERS=kafka:29092
     depends_on:
       - mysql
@@ -122,7 +122,7 @@ services:
     environment:
       - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
       - DATABASE_USER=root
-      - DATABASE_PASSWORD=T1981@I29#sql
+      - DATABASE_PASSWORD=password123
       - KAFKA_BROKERS=kafka:29092
     depends_on:
       - mysql
@@ -138,7 +138,7 @@ services:
     environment:
       - DATABASE_URL=jdbc:mysql://mysql:3306/transport_ticketing
       - DATABASE_USER=root
-      - DATABASE_PASSWORD=T1981@I29#sql
+      - DATABASE_PASSWORD=password123
       - KAFKA_BROKERS=kafka:29092
     depends_on:
       - mysql
