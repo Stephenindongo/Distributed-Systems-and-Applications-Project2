@@ -1,4 +1,0 @@
-# Passenger Service Configuration
-# Minimal configuration for development
-
-servicePort = 8080

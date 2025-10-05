@@ -13,8 +13,8 @@ import ballerina/kafka;
 
 // Database configuration
 configurable string databaseUrl = "jdbc:mysql://localhost:3306/transport_ticketing";
-configurable string databaseUser = "root";
-configurable string databasePassword = "T1981@I29#sql";
+configurable string databaseUser = "transport_user";
+configurable string databasePassword = "transport_password";
 
 // Kafka configuration
 configurable string kafkaBrokers = "localhost:9092";
